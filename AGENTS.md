@@ -1,54 +1,28 @@
 # AGENTS.md
 
-## Purpose
-Rebuild the current public `tonyingram.com` site in Astro, replacing the current WordPress/Elementor version.
+## Repo rules
+- Read `docs/roadmap/tonyingram-site-weekend-roadmap.md` before starting major work.
+- Keep instructions here short and durable; treat the roadmap as the project spec.
 
-## Source of truth
-- The live public site is the primary source of truth for content, structure, and visual hierarchy.
-- Also review `docs/roadmap/weekend-roadmap.md`.
-- Use any `legacy/` or `public/legacy/` reference material if present.
+## Working style
+- Make small, granular commits.
+- Commit often when a logical unit of work is complete.
+- Keep commit messages clear and specific.
+- Avoid mixing unrelated changes in the same commit.
 
-## Scope for v1
-- Recreate the current public site only
-- Current pages:
-  - Home
-  - CV
-- Deployable to Cloudflare Pages
-- Preserve a clean path for future Markdown/MDX blog posts
+## Technical guardrails
+- Keep the stack minimal.
+- Prefer Astro-native patterns and minimal dependencies.
+- Do not add backend, CMS, auth, database, or contact form unless explicitly asked.
+- Avoid React unless clearly necessary.
 
-## Out of scope for v1
-- CMS
-- Backend
-- Database
-- Auth
-- Contact form
-- Email capture
-- App-like interactivity
-- Unrequested redesigns
+## Implementation guardrails
+- Recreate the current public site faithfully before suggesting improvements.
+- Keep assets local to the repo.
+- Do not create unnecessary top-level directories.
+- Update README when commands or deploy steps change.
 
-## Technical preferences
-- Use Astro
-- Keep the site primarily static
-- Prefer Astro-native patterns and minimal dependencies
-- Avoid React unless clearly necessary
-- Keep code simple, readable, and easy to maintain
-
-## Guardrails
-- Reproduce the existing site faithfully before suggesting improvements
-- Do not over-engineer
-- Do not introduce backend features unless explicitly requested
-- Do not add analytics unless explicitly requested for the current task
-- Do not create unnecessary top-level directories
-
-## Deployment intent
-- Canonical production domain: `https://tonyingram.com`
-- `www` should redirect to the apex domain
-- Target hosting: Cloudflare Pages
-- Fast preview deployment is the immediate goal
-
-## Before declaring work complete
-- Run the local build
-- Check for missing assets and broken links
-- Check responsive behavior
-- Update README with accurate setup, dev, build, and deployment notes
-- Clearly note any differences from the legacy site
+## Before claiming work is done
+- Run the local build.
+- Check for broken links and missing assets.
+- Note any assumptions or unavoidable differences.
