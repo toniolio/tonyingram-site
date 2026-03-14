@@ -1,0 +1,81 @@
+---
+import CvDocument from "../components/CvDocument.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Curriculum Vitae - Tony Ingram, PhD"
+  description="Long-form curriculum vitae for Tony Ingram, PhD."
+  canonicalPath="/cv/"
+>
+  <section class="section">
+    <div class="site-shell narrow-shell cv-page">
+      <h1>Curriculum Vitae</h1>
+      <p>This is a long form, somewhat &ldquo;academic&rdquo; style curriculum vitae.</p>
+      <p>
+        For something more concise, see my
+        <a href="https://www.linkedin.com/in/tgjingram/">LinkedIn profile</a>.
+      </p>
+      <CvDocument />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .cv-page {
+    color: #2a2a2a;
+  }
+
+  .cv-page > p {
+    color: var(--color-muted);
+  }
+
+  :global(.cv-document .cv h2) {
+    margin-top: 2.25rem;
+    margin-bottom: 0.9rem;
+    font-size: 1.85rem;
+  }
+
+  :global(.cv-document .cv h3) {
+    margin-top: 1.8rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+  }
+
+  :global(.cv-document .cv p),
+  :global(.cv-document .cv ul),
+  :global(.cv-document .cv ol) {
+    margin-bottom: 1rem;
+  }
+
+  :global(.cv-document .cv ul),
+  :global(.cv-document .cv ol) {
+    padding-left: 1.35rem;
+  }
+
+  :global(.cv-document .cv li + li) {
+    margin-top: 0.45rem;
+  }
+
+  :global(.cv-document .cv .cv-entry) {
+    margin-top: 1.4rem;
+  }
+
+  :global(.cv-document .cv .cv-role) {
+    margin-bottom: 0.6rem;
+  }
+
+  :global(.cv-document .cv a) {
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-width: 720px) {
+    :global(.cv-document .cv h2) {
+      font-size: 1.55rem;
+    }
+
+    :global(.cv-document .cv h3) {
+      font-size: 1.15rem;
+    }
+  }
+</style>

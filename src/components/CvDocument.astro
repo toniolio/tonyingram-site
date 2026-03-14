@@ -1,0 +1,44 @@
+---
+import { readFileSync } from "node:fs";
+
+function extractDivHtml(html: string, marker: string) {
+  const start = html.indexOf(marker);
+
+  if (start === -1) {
+    throw new Error(`Unable to find marker: ${marker}`);
+  }
+
+  let depth = 0;
+  let index = start;
+
+  while (index < html.length) {
+    const nextOpen = html.indexOf("<div", index);
+    const nextClose = html.indexOf("</div>", index);
+
+    if (nextClose === -1) {
+      throw new Error(`Unable to find closing div for marker: ${marker}`);
+    }
+
+    if (nextOpen !== -1 && nextOpen < nextClose) {
+      depth += 1;
+      index = nextOpen + 4;
+      continue;
+    }
+
+    depth -= 1;
+    index = nextClose + 6;
+
+    if (depth === 0) {
+      return html.slice(start, index);
+    }
+  }
+
+  throw new Error(`Unable to extract div for marker: ${marker}`);
+}
+
+const sourcePath = new URL("../../public/legacy/source-html/cv.html", import.meta.url);
+const sourceHtml = readFileSync(sourcePath, "utf8");
+const cvHtml = extractDivHtml(sourceHtml, '<div class="cv">');
+---
+
+<div class="cv-document" set:html={cvHtml} />
