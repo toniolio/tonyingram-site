@@ -1,15 +1,25 @@
 {
   "name": "tonyingram-site",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Astro rebuild of the current public tonyingram.com site.",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "astro",
+    "static-site"
+  ],
+  "author": "Tony Ingram",
   "license": "ISC",
   "volta": {
     "node": "22.22.1"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.2",
+    "astro": "^5.14.1"
   }
 }
