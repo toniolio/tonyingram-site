@@ -10,4 +10,8 @@ const blog = defineCollection({
   }),
 });
 
-export const collections = { blog };
+const cv = defineCollection({
+  type: "content",
+});
+
+export const collections = { blog, cv };

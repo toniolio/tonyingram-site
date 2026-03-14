@@ -114,4 +114,4 @@ The current site capture used for this rebuild lives in:
 ## Notes
 
 - The live WordPress site uses Elementor-generated markup; this rebuild keeps the content and page structure faithful while simplifying the implementation.
-- The CV content is rendered from the captured legacy HTML so the copy stays aligned with the saved source of truth.
+- The live CV page is rendered from `src/content/cv/cv.md`, with `public/legacy/` kept only as a historical capture/reference.
