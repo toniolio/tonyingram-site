@@ -130,6 +130,10 @@ h3 {
   gap: 1rem;
 }
 
+.site-header__actions--desktop {
+  display: flex;
+}
+
 .site-title {
   margin: 0;
   font-size: 1.8rem;
@@ -156,6 +160,76 @@ h3 {
 
 .site-nav a[aria-current="page"] {
   text-decoration-thickness: 2px;
+}
+
+.site-menu {
+  display: none;
+  position: relative;
+}
+
+.site-menu[open] .site-menu__toggle-line:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.site-menu[open] .site-menu__toggle-line:nth-child(2) {
+  opacity: 0;
+}
+
+.site-menu[open] .site-menu__toggle-line:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+.site-menu__toggle {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.28rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.55rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  list-style: none;
+  cursor: pointer;
+}
+
+.site-menu__toggle::-webkit-details-marker {
+  display: none;
+}
+
+.site-menu__toggle:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.site-menu__toggle-line {
+  display: block;
+  width: 100%;
+  height: 1.5px;
+  background: var(--color-text);
+  transform-origin: center;
+  transition: transform 140ms ease, opacity 140ms ease;
+}
+
+.site-menu__panel {
+  position: absolute;
+  top: calc(100% + 0.7rem);
+  right: 0;
+  display: grid;
+  gap: 0.9rem;
+  min-width: 13.5rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  z-index: 5;
+}
+
+.site-nav--mobile {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
 }
 
 .theme-toggle {
@@ -232,16 +306,18 @@ h3 {
   }
 
   .site-header__inner {
-    align-items: flex-start;
-    flex-direction: column;
+    align-items: center;
   }
 
-  .site-header__actions {
-    flex-direction: column;
-    align-items: flex-start;
+  .site-title {
+    font-size: 1.45rem;
   }
 
-  .site-nav {
-    gap: 1rem;
+  .site-header__actions--desktop {
+    display: none;
+  }
+
+  .site-menu {
+    display: block;
   }
 }

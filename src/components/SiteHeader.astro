@@ -17,7 +17,7 @@ const navItems = [
     <h2 class="site-title">
       <a href="/">Tony Ingram, PhD</a>
     </h2>
-    <div class="site-header__actions">
+    <div class="site-header__actions site-header__actions--desktop">
       <nav aria-label="Main navigation">
         <ul class="site-nav">
           {
@@ -37,5 +37,32 @@ const navItems = [
       </nav>
       <ThemeToggle />
     </div>
+    <details class="site-menu">
+      <summary class="site-menu__toggle" aria-label="Open site navigation">
+        <span class="site-menu__toggle-line" aria-hidden="true"></span>
+        <span class="site-menu__toggle-line" aria-hidden="true"></span>
+        <span class="site-menu__toggle-line" aria-hidden="true"></span>
+      </summary>
+      <div class="site-menu__panel">
+        <nav aria-label="Mobile navigation">
+          <ul class="site-nav site-nav--mobile">
+            {
+              navItems.map((item) => {
+                const isActive = currentPath === item.href || currentPath === "/curriculum-vitae/";
+
+                return (
+                  <li>
+                    <a href={item.href} aria-current={isActive ? "page" : undefined}>
+                      {item.label}
+                    </a>
+                  </li>
+                );
+              })
+            }
+          </ul>
+        </nav>
+        <ThemeToggle />
+      </div>
+    </details>
   </div>
 </header>

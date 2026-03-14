@@ -16,9 +16,11 @@
   (() => {
     const storageKey = "theme-preference";
     const root = document.documentElement;
-    const button = document.querySelector("[data-theme-toggle]");
+    const buttons = Array.from(document.querySelectorAll("[data-theme-toggle]")).filter(
+      (button) => button instanceof HTMLButtonElement,
+    );
 
-    if (!(button instanceof HTMLButtonElement)) {
+    if (buttons.length === 0) {
       return;
     }
 
@@ -28,20 +30,24 @@
     const syncTheme = (theme) => {
       root.dataset.theme = theme;
       root.style.colorScheme = theme;
-      button.dataset.theme = theme;
-      button.setAttribute(
-        "aria-label",
-        `Switch to ${theme === "dark" ? "light" : "dark"} theme`,
-      );
-      button.setAttribute("title", `Use ${theme === "dark" ? "light" : "dark"} theme`);
+      buttons.forEach((button) => {
+        button.dataset.theme = theme;
+        button.setAttribute(
+          "aria-label",
+          `Switch to ${theme === "dark" ? "light" : "dark"} theme`,
+        );
+        button.setAttribute("title", `Use ${theme === "dark" ? "light" : "dark"} theme`);
+      });
     };
 
     syncTheme(getActiveTheme());
 
-    button.addEventListener("click", () => {
-      const nextTheme = getActiveTheme() === "dark" ? "light" : "dark";
-      localStorage.setItem(storageKey, nextTheme);
-      syncTheme(nextTheme);
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const nextTheme = getActiveTheme() === "dark" ? "light" : "dark";
+        localStorage.setItem(storageKey, nextTheme);
+        syncTheme(nextTheme);
+      });
     });
 
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
