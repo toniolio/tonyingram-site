@@ -107,11 +107,10 @@ Target analytics provider is Cloudflare Web Analytics. This still needs to be en
 
 The current site capture used for this rebuild lives in:
 
-- `public/legacy/source-html/`
 - `public/legacy/screenshots/`
 - `public/legacy/notes/`
 
 ## Notes
 
 - The live WordPress site uses Elementor-generated markup; this rebuild keeps the content and page structure faithful while simplifying the implementation.
-- The live CV page is rendered from `src/content/cv/cv.md`, with `public/legacy/` kept only as a historical capture/reference.
+- The live CV page is rendered from `src/content/cv/cv.md`, with `public/legacy/` kept only for visual/historical reference.
