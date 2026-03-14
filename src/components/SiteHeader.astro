@@ -1,0 +1,36 @@
+---
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+
+const navItems = [
+  { href: "/cv/", label: "Curriculum Vitae" },
+];
+---
+
+<header class="site-header">
+  <div class="site-shell site-header__inner">
+    <h2 class="site-title">
+      <a href="/">Tony Ingram, PhD</a>
+    </h2>
+    <nav aria-label="Main navigation">
+      <ul class="site-nav">
+        {
+          navItems.map((item) => {
+            const isActive = currentPath === item.href || currentPath === "/curriculum-vitae/";
+
+            return (
+              <li>
+                <a href={item.href} aria-current={isActive ? "page" : undefined}>
+                  {item.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
