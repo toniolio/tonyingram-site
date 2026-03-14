@@ -14,51 +14,66 @@
 
 <script is:inline>
   (() => {
-    const storageKey = "theme-preference";
-    const root = document.documentElement;
-    const buttons = Array.from(document.querySelectorAll("[data-theme-toggle]")).filter(
-      (button) => button instanceof HTMLButtonElement,
-    );
-
-    if (buttons.length === 0) {
+    if (window.__themeToggleInitialized) {
       return;
     }
 
-    const getSystemTheme = () =>
-      window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    const getActiveTheme = () => (root.dataset.theme === "dark" ? "dark" : "light");
-    const syncTheme = (theme) => {
-      root.dataset.theme = theme;
-      root.style.colorScheme = theme;
-      buttons.forEach((button) => {
-        button.dataset.theme = theme;
-        button.setAttribute(
-          "aria-label",
-          `Switch to ${theme === "dark" ? "light" : "dark"} theme`,
-        );
-        button.setAttribute("title", `Use ${theme === "dark" ? "light" : "dark"} theme`);
-      });
-    };
+    window.__themeToggleInitialized = true;
 
-    syncTheme(getActiveTheme());
+    const storageKey = "theme-preference";
+    const initializeThemeToggle = () => {
+      const root = document.documentElement;
+      const buttons = Array.from(document.querySelectorAll("[data-theme-toggle]")).filter(
+        (button) => button instanceof HTMLButtonElement,
+      );
 
-    buttons.forEach((button) => {
-      button.addEventListener("click", () => {
-        const nextTheme = getActiveTheme() === "dark" ? "light" : "dark";
-        localStorage.setItem(storageKey, nextTheme);
-        syncTheme(nextTheme);
-      });
-    });
-
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleSystemThemeChange = () => {
-      if (localStorage.getItem(storageKey) !== null) {
+      if (buttons.length === 0) {
         return;
       }
 
-      syncTheme(getSystemTheme());
+      const getSystemTheme = () =>
+        window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      const getActiveTheme = () => (root.dataset.theme === "dark" ? "dark" : "light");
+      const syncTheme = (theme) => {
+        root.dataset.theme = theme;
+        root.style.colorScheme = theme;
+        buttons.forEach((button) => {
+          button.dataset.theme = theme;
+          button.setAttribute(
+            "aria-label",
+            `Switch to ${theme === "dark" ? "light" : "dark"} theme`,
+          );
+          button.setAttribute("title", `Use ${theme === "dark" ? "light" : "dark"} theme`);
+        });
+      };
+
+      syncTheme(getActiveTheme());
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const nextTheme = getActiveTheme() === "dark" ? "light" : "dark";
+          localStorage.setItem(storageKey, nextTheme);
+          syncTheme(nextTheme);
+        });
+      });
+
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      const handleSystemThemeChange = () => {
+        if (localStorage.getItem(storageKey) !== null) {
+          return;
+        }
+
+        syncTheme(getSystemTheme());
+      };
+
+      mediaQuery.addEventListener("change", handleSystemThemeChange);
     };
 
-    mediaQuery.addEventListener("change", handleSystemThemeChange);
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initializeThemeToggle, { once: true });
+      return;
+    }
+
+    initializeThemeToggle();
   })();
 </script>
