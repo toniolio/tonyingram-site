@@ -1,4 +1,6 @@
 ---
+import ThemeToggle from "./ThemeToggle.astro";
+
 interface Props {
   currentPath: string;
 }
@@ -15,22 +17,25 @@ const navItems = [
     <h2 class="site-title">
       <a href="/">Tony Ingram, PhD</a>
     </h2>
-    <nav aria-label="Main navigation">
-      <ul class="site-nav">
-        {
-          navItems.map((item) => {
-            const isActive = currentPath === item.href || currentPath === "/curriculum-vitae/";
+    <div class="site-header__actions">
+      <nav aria-label="Main navigation">
+        <ul class="site-nav">
+          {
+            navItems.map((item) => {
+              const isActive = currentPath === item.href || currentPath === "/curriculum-vitae/";
 
-            return (
-              <li>
-                <a href={item.href} aria-current={isActive ? "page" : undefined}>
-                  {item.label}
-                </a>
-              </li>
-            );
-          })
-        }
-      </ul>
-    </nav>
+              return (
+                <li>
+                  <a href={item.href} aria-current={isActive ? "page" : undefined}>
+                    {item.label}
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </nav>
+      <ThemeToggle />
+    </div>
   </div>
 </header>

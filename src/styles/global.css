@@ -124,6 +124,12 @@ h3 {
   gap: var(--space-4);
 }
 
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .site-title {
   margin: 0;
   font-size: 1.8rem;
@@ -150,6 +156,37 @@ h3 {
 
 .site-nav a[aria-current="page"] {
   text-decoration-thickness: 2px;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-muted);
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  color: var(--color-text);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.theme-toggle__label {
+  color: var(--color-muted);
+}
+
+.theme-toggle__value {
+  color: var(--color-heading);
+  font-weight: 700;
 }
 
 .site-footer {
@@ -182,6 +219,11 @@ h3 {
   .site-header__inner {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .site-header__actions {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .site-nav {
