@@ -1,6 +1,15 @@
 <button class="theme-toggle" type="button" data-theme-toggle>
-  <span class="theme-toggle__label">Theme</span>
-  <span class="theme-toggle__value" data-theme-toggle-value>Light</span>
+  <span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="4" stroke-width="1.6"></circle>
+      <path d="M12 2.5v2.5M12 19v2.5M21.5 12H19M5 12H2.5M18.7 5.3l-1.8 1.8M7.1 16.9l-1.8 1.8M18.7 18.7l-1.8-1.8M7.1 7.1 5.3 5.3" stroke-width="1.6"></path>
+    </svg>
+  </span>
+  <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 14.2A8 8 0 1 1 9.8 4 6.5 6.5 0 0 0 20 14.2Z" stroke-width="1.6"></path>
+    </svg>
+  </span>
 </button>
 
 <script is:inline>
@@ -8,9 +17,8 @@
     const storageKey = "theme-preference";
     const root = document.documentElement;
     const button = document.querySelector("[data-theme-toggle]");
-    const value = button?.querySelector("[data-theme-toggle-value]");
 
-    if (!(button instanceof HTMLButtonElement) || !(value instanceof HTMLElement)) {
+    if (!(button instanceof HTMLButtonElement)) {
       return;
     }
 
@@ -20,12 +28,12 @@
     const syncTheme = (theme) => {
       root.dataset.theme = theme;
       root.style.colorScheme = theme;
-      value.textContent = theme === "dark" ? "Dark" : "Light";
+      button.dataset.theme = theme;
       button.setAttribute(
         "aria-label",
         `Switch to ${theme === "dark" ? "light" : "dark"} theme`,
       );
-      button.setAttribute("title", `Theme: ${theme}`);
+      button.setAttribute("title", `Use ${theme === "dark" ? "light" : "dark"} theme`);
     };
 
     syncTheme(getActiveTheme());

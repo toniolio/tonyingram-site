@@ -161,14 +161,16 @@ h3 {
 .theme-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.45rem 0.75rem;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: var(--color-muted);
-  font: inherit;
   line-height: 1;
   cursor: pointer;
+  transition: color 140ms ease, opacity 140ms ease;
 }
 
 .theme-toggle:hover {
@@ -180,13 +182,25 @@ h3 {
   outline-offset: 2px;
 }
 
-.theme-toggle__label {
-  color: var(--color-muted);
+.theme-toggle__icon {
+  display: inline-flex;
 }
 
-.theme-toggle__value {
-  color: var(--color-heading);
-  font-weight: 700;
+.theme-toggle__icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.theme-toggle__icon--sun {
+  display: none;
+}
+
+.theme-toggle[data-theme="dark"] .theme-toggle__icon--sun {
+  display: inline-flex;
+}
+
+.theme-toggle[data-theme="dark"] .theme-toggle__icon--moon {
+  display: none;
 }
 
 .site-footer {
