@@ -26,6 +26,7 @@ const socialImageUrl = new URL(socialImage, Astro.site);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
@@ -39,6 +40,22 @@ const socialImageUrl = new URL(socialImage, Astro.site);
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImageUrl} />
+    <script is:inline>
+      (() => {
+        const storageKey = "theme-preference";
+        const root = document.documentElement;
+        const storedTheme = localStorage.getItem(storageKey);
+        const preferredTheme =
+          storedTheme === "light" || storedTheme === "dark"
+            ? storedTheme
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+
+        root.dataset.theme = preferredTheme;
+        root.style.colorScheme = preferredTheme;
+      })();
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#content">Skip to content</a>

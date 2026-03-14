@@ -1,9 +1,14 @@
 :root {
+  color-scheme: light;
   --color-background: #fff;
+  --color-surface: #fff;
+  --color-surface-strong: #f5f5f5;
   --color-text: #242424;
+  --color-heading: #111;
   --color-muted: #5f5f5f;
   --color-border: #dedede;
   --color-link: #111;
+  --color-focus: #111;
   --font-sans: Arial, Helvetica, sans-serif;
   --shell-width: 1080px;
   --content-width: 800px;
@@ -16,12 +21,26 @@
   --space-7: 4.5rem;
 }
 
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-background: #141414;
+  --color-surface: #1b1b1b;
+  --color-surface-strong: #222;
+  --color-text: #e8e5df;
+  --color-heading: #f4f1eb;
+  --color-muted: #b8b1a7;
+  --color-border: #3b3b3b;
+  --color-link: #f4f1eb;
+  --color-focus: #f4f1eb;
+}
+
 * {
   box-sizing: border-box;
 }
 
 html {
   scroll-behavior: smooth;
+  background: var(--color-background);
 }
 
 body {
@@ -53,7 +72,7 @@ h2,
 h3 {
   margin: 0 0 var(--space-3);
   line-height: 1.2;
-  color: #111;
+  color: var(--color-heading);
 }
 
 h1 {
@@ -89,8 +108,8 @@ h3 {
   top: 1rem;
   z-index: 10;
   padding: 0.75rem 1rem;
-  background: #fff;
-  border: 1px solid #111;
+  background: var(--color-surface);
+  border: 1px solid var(--color-focus);
 }
 
 .site-header {
