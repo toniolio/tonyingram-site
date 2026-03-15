@@ -1,7 +1,7 @@
 
   <div class="cv">
   <h2>Tony G. J. Ingram, PhD</h2>
-  <p>Email: <a href="mailto:tony@tonyingram.com">tony@tonyingram.com</a><br/>Location: Halifax, NS, Canada<br/>Phone: (902) 209-6191</p>
+  <p>Based in Canada</p>
   <p>Website: <a href="https://tonyingram.com">tonyingram.com</a><br/>LinkedIn: <a href="https://linkedin.com/in/tgjingram/">linkedin.com/in/tgjingram/</a><br/>GitHub: <a href="https://github.com/toniolio">github.com/toniolio</a></p>
   <h2 id="summary">Summary</h2>
   <p>PhD neuroscientist and AI product leader who founded and led a
@@ -918,11 +918,5 @@ Invited performance: 'The Cypher' by Koala Corps</p>
 2007 Canada Dance Festival<br/>
 Invited Performance: 'Hip Hop 360' by East Rock Crew</p>
   <h2 id="references">References</h2>
-  <h3 id="academic-references">Academic References</h3>
-  <p>Dr. Shaun Boe<br/>
-<em>Professor</em>, School of Physiotherapy; Department of Psychology
-and Neuroscience;<br/>
-Department of Medicine; School of Health and Human Performance<br/>
-Dalhousie University, Halifax, NS, Canada<br/>
-Email: s.boe@dal.ca</p>
-  <p><em>Additional references available upon request</em></p></div>
+  <p><em>References available upon request</em></p>
+</div>
