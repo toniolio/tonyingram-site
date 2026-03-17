@@ -11,10 +11,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <div class="site-shell hero__inner">
       <img
         class="hero__image"
-        src="/images/tonyingram_phd.JPG"
+        src="/images/tonyingram_phd_crop.jpg"
         alt="Tony Ingram, PhD"
-        width="2000"
-        height="1333"
+        width="1163"
+        height="1162"
       />
       <div class="hero__copy">
         <h1>Aligning brains, bodies, and tech.</h1>
@@ -95,13 +95,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 <style>
   .hero__inner {
     display: grid;
-    grid-template-columns: minmax(0, 1.3fr) minmax(18rem, 1fr);
+    grid-template-columns: minmax(12rem, 2fr) minmax(0, 3fr);
     align-items: center;
     gap: clamp(2rem, 5vw, 4.5rem);
   }
 
   .hero__image {
-    width: 100%;
+    width: min(100%, 22rem);
+    justify-self: center;
     border-radius: 2px;
   }
 
