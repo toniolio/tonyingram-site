@@ -21,6 +21,21 @@
   --space-7: 4.5rem;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --color-background: #141414;
+    --color-surface: #1b1b1b;
+    --color-surface-strong: #222;
+    --color-text: #e8e5df;
+    --color-heading: #f4f1eb;
+    --color-muted: #b8b1a7;
+    --color-border: #3b3b3b;
+    --color-link: #f4f1eb;
+    --color-focus: #f4f1eb;
+  }
+}
+
 [data-theme="dark"] {
   color-scheme: dark;
   --color-background: #141414;
@@ -232,6 +247,10 @@ h3 {
   gap: 0.9rem;
 }
 
+.theme-picker {
+  position: relative;
+}
+
 .theme-toggle {
   display: inline-flex;
   align-items: center;
@@ -247,7 +266,8 @@ h3 {
   transition: color 140ms ease, opacity 140ms ease;
 }
 
-.theme-toggle:hover {
+.theme-toggle:hover,
+.theme-picker[data-open="true"] .theme-toggle {
   color: var(--color-text);
 }
 
@@ -265,16 +285,70 @@ h3 {
   height: 1rem;
 }
 
-.theme-toggle__icon--sun {
-  display: none;
-}
-
-.theme-toggle[data-theme="dark"] .theme-toggle__icon--sun {
+.theme-toggle__icon--system {
   display: inline-flex;
 }
 
-.theme-toggle[data-theme="dark"] .theme-toggle__icon--moon {
+.theme-toggle__icon--sun,
+.theme-toggle__icon--moon {
   display: none;
+}
+
+.theme-toggle[data-theme-preference="light"] .theme-toggle__icon--sun,
+.theme-toggle[data-theme-preference="dark"] .theme-toggle__icon--moon {
+  display: inline-flex;
+}
+
+.theme-toggle[data-theme-preference="light"] .theme-toggle__icon--system,
+.theme-toggle[data-theme-preference="dark"] .theme-toggle__icon--system {
+  display: none;
+}
+
+.theme-picker__panel {
+  position: absolute;
+  top: calc(100% + 0.55rem);
+  right: 0;
+  display: grid;
+  gap: 0.3rem;
+  min-width: 9.5rem;
+  padding: 0.4rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  background: var(--color-surface);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  z-index: 8;
+}
+
+.theme-picker__panel[hidden] {
+  display: none;
+}
+
+.theme-picker__option {
+  width: 100%;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+
+.theme-picker__option:hover {
+  background: var(--color-surface-strong);
+}
+
+.theme-picker__option:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.theme-picker__option[aria-pressed="true"] {
+  border-color: var(--color-border);
+  background: var(--color-surface-strong);
+  font-weight: 600;
 }
 
 .site-footer {
