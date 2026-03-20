@@ -1,8 +1,8 @@
 # AGENTS.md
 
 ## Repo rules
-- Read `docs/roadmap/tonyingram-site-weekend-roadmap.md` before starting major work.
-- Keep instructions here short and durable; treat the roadmap as the project spec.
+- Read `docs/roadmap/current-roadmap.md` before starting major work.
+- Keep instructions here short and durable.
 
 ## Working style
 - Make small, granular commits.
@@ -20,7 +20,7 @@
 - Recreate the current public site faithfully before suggesting improvements.
 - Keep assets local to the repo.
 - Do not create unnecessary top-level directories.
-- Update README when commands or deploy steps change.
+- Update docs when commands or deploy details change.
 
 ## Before claiming work is done
 - Run the local build.
