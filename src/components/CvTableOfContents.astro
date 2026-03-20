@@ -16,16 +16,16 @@ const {
   data-target-selector={targetSelector}
   hidden
 >
-  <details class="cv-toc__mobile">
-    <summary>On this page</summary>
-    <nav class="cv-toc__nav" aria-label="Table of contents">
+  <details class="cv-toc__mobile" data-cv-toc-mobile>
+    <summary class="cv-toc__mobile-toggle">Contents</summary>
+    <nav class="cv-toc__mobile-panel" aria-label="Table of contents">
       <ul class="cv-toc__list" data-cv-toc-mobile-list></ul>
       <a class="cv-toc__top-link" href={topHref}>Back to top</a>
     </nav>
   </details>
 
-  <aside class="cv-toc__desktop" aria-labelledby="cv-toc-title">
-    <nav class="cv-toc__nav" aria-labelledby="cv-toc-title">
+  <aside class="cv-toc__desktop" aria-labelledby="cv-toc-title" data-cv-toc-desktop>
+    <nav class="cv-toc__desktop-nav" aria-labelledby="cv-toc-title">
       <h2 id="cv-toc-title" class="cv-toc__title">On this page</h2>
       <ul class="cv-toc__list" data-cv-toc-desktop-list></ul>
       <a class="cv-toc__top-link" href={topHref}>Back to top</a>
@@ -109,6 +109,34 @@ const {
       list.append(fragment);
     };
 
+    const setDesktopOverflow = (root) => {
+      const desktop = root.querySelector("[data-cv-toc-desktop]");
+      const desktopNav = root.querySelector(".cv-toc__desktop-nav");
+
+      if (!(desktop instanceof HTMLElement)) {
+        return;
+      }
+
+      if (!(desktopNav instanceof HTMLElement)) {
+        return;
+      }
+
+      desktop.classList.remove("cv-toc__desktop--scrollable");
+      desktopNav.style.removeProperty("--cv-toc-max-height");
+
+      if (!window.matchMedia("(min-width: 980px)").matches) {
+        return;
+      }
+
+      const topOffset = Number.parseFloat(getComputedStyle(desktop).top) || 0;
+      const maxHeight = Math.floor(window.innerHeight - topOffset - 24);
+
+      if (desktopNav.scrollHeight > maxHeight) {
+        desktop.classList.add("cv-toc__desktop--scrollable");
+        desktopNav.style.setProperty("--cv-toc-max-height", `${maxHeight}px`);
+      }
+    };
+
     const initRoot = (root) => {
       const targetSelector = root.dataset.targetSelector;
 
@@ -143,7 +171,7 @@ const {
       fillList(mobileList, entries);
       root.hidden = false;
 
-      const mobileDetails = root.querySelector(".cv-toc__mobile");
+      const mobileDetails = root.querySelector("[data-cv-toc-mobile]");
 
       if (mobileDetails instanceof HTMLDetailsElement) {
         mobileDetails.querySelectorAll('a[href^="#"]').forEach((link) => {
@@ -151,7 +179,30 @@ const {
             mobileDetails.open = false;
           });
         });
+
+        document.addEventListener("click", (event) => {
+          const target = event.target;
+
+          if (target instanceof Node && !mobileDetails.contains(target)) {
+            mobileDetails.open = false;
+          }
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            mobileDetails.open = false;
+          }
+        });
       }
+
+      const syncDesktopOverflow = () => {
+        window.requestAnimationFrame(() => {
+          setDesktopOverflow(root);
+        });
+      };
+
+      syncDesktopOverflow();
+      window.addEventListener("resize", syncDesktopOverflow);
     };
 
     const init = () => {
@@ -172,37 +223,78 @@ const {
 
 <style>
   .cv-toc {
-    margin-bottom: var(--space-4);
+    position: sticky;
+    top: 0.85rem;
+    z-index: 4;
+    width: fit-content;
+    margin: 0 0 var(--space-4) auto;
   }
 
   .cv-toc__mobile {
-    border: 1px solid var(--color-border);
-    border-radius: 0.75rem;
-    background: var(--color-surface);
+    position: relative;
   }
 
-  .cv-toc__mobile summary {
-    padding: 0.85rem 1rem;
+  .cv-toc__mobile-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 0.95rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-surface);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
     font-weight: 600;
     cursor: pointer;
     list-style: none;
   }
 
-  .cv-toc__mobile summary::-webkit-details-marker {
+  .cv-toc__mobile-toggle::-webkit-details-marker {
     display: none;
   }
 
-  .cv-toc__mobile[open] .cv-toc__nav {
-    padding: 0 1rem 1rem;
+  .cv-toc__mobile-toggle:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  .cv-toc__mobile-toggle::after {
+    content: "";
+    width: 0.55rem;
+    height: 0.55rem;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-0.1rem) rotate(45deg);
+    transition: transform 140ms ease;
+  }
+
+  .cv-toc__mobile[open] .cv-toc__mobile-toggle::after {
+    transform: translateY(0.1rem) rotate(-135deg);
+  }
+
+  .cv-toc__mobile-panel {
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    right: 0;
+    width: min(18rem, calc(100vw - 2rem));
+    max-height: calc(100vh - 5.75rem);
+    padding: 1rem;
+    overflow: auto;
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    background: var(--color-surface);
+    box-shadow: 0 20px 38px rgba(0, 0, 0, 0.14);
+    scrollbar-width: thin;
   }
 
   .cv-toc__desktop {
     display: none;
+    position: relative;
   }
 
   .cv-toc__title {
     margin: 0 0 0.9rem;
-    font-size: 1rem;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
   }
 
   .cv-toc__list {
@@ -211,21 +303,44 @@ const {
     list-style: none;
   }
 
-  .cv-toc__item + .cv-toc__item {
-    margin-top: 0.6rem;
+  .cv-toc__item--level-2 + .cv-toc__item--level-2 {
+    margin-top: 0.95rem;
   }
 
   .cv-toc__item--level-3 {
-    padding-left: 0.9rem;
-    font-size: 0.95rem;
+    position: relative;
+    margin-top: 0.42rem;
+    padding-left: 1rem;
   }
 
-  .cv-toc__nav a {
+  .cv-toc__item--level-3::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.8rem;
+    width: 0.45rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .cv-toc__item a {
+    display: inline-block;
     text-decoration: none;
   }
 
-  .cv-toc__nav a:hover,
-  .cv-toc__nav a:focus-visible {
+  .cv-toc__item--level-2 a {
+    color: var(--color-heading);
+    font-weight: 600;
+  }
+
+  .cv-toc__item--level-3 a {
+    color: var(--color-muted);
+    font-size: 0.95rem;
+  }
+
+  .cv-toc__item a:hover,
+  .cv-toc__item a:focus-visible,
+  .cv-toc__top-link:hover,
+  .cv-toc__top-link:focus-visible {
     text-decoration: underline;
     text-underline-offset: 0.22em;
   }
@@ -233,10 +348,13 @@ const {
   .cv-toc__top-link {
     display: inline-block;
     font-size: 0.95rem;
+    color: var(--color-muted);
   }
 
   @media (min-width: 980px) {
     .cv-toc {
+      position: static;
+      width: auto;
       margin: 0;
     }
 
@@ -250,11 +368,28 @@ const {
       top: var(--space-5);
     }
 
-    .cv-toc__nav {
-      max-height: calc(100vh - (2 * var(--space-5)));
-      padding-left: 1rem;
+    .cv-toc__desktop-nav {
+      padding-right: 1.25rem;
+      border-right: 1px solid var(--color-border);
+    }
+
+    .cv-toc__desktop--scrollable .cv-toc__desktop-nav {
+      max-height: var(--cv-toc-max-height);
+      padding-bottom: 1.25rem;
       overflow: auto;
-      border-left: 1px solid var(--color-border);
+      scrollbar-gutter: stable;
+      scrollbar-width: thin;
+    }
+
+    .cv-toc__desktop--scrollable::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 1rem;
+      bottom: 0;
+      height: 1.5rem;
+      background: linear-gradient(to bottom, transparent, var(--color-background));
+      pointer-events: none;
     }
   }
 </style>
