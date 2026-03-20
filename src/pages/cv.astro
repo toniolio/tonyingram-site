@@ -1,5 +1,6 @@
 ---
 import CvDocument from "../components/CvDocument.astro";
+import CvTableOfContents from "../components/CvTableOfContents.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
@@ -9,14 +10,24 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   canonicalPath="/cv/"
 >
   <section class="section">
-    <div class="site-shell narrow-shell cv-page">
-      <h1>Curriculum Vitae</h1>
-      <p>This is a long form, somewhat &ldquo;academic&rdquo; style curriculum vitae.</p>
-      <p>
-        For something more concise, see my
-        <a href="https://www.linkedin.com/in/tgjingram/">LinkedIn profile</a>.
-      </p>
-      <CvDocument />
+    <div class="site-shell narrow-shell cv-page" id="cv-top">
+      <div class="cv-page__intro">
+        <h1>Curriculum Vitae</h1>
+        <p>This is a long form, somewhat &ldquo;academic&rdquo; style curriculum vitae.</p>
+        <p>
+          For something more concise, see my
+          <a href="https://www.linkedin.com/in/tgjingram/">LinkedIn profile</a>.
+        </p>
+      </div>
+
+      <div class="cv-page__layout">
+        <CvTableOfContents />
+
+        <div class="cv-page__content">
+          <CvDocument />
+          <p class="cv-page__back-to-top"><a href="#cv-top">Back to top</a></p>
+        </div>
+      </div>
     </div>
   </section>
 </BaseLayout>
@@ -26,7 +37,30 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     color: var(--color-text);
   }
 
-  .cv-page > p {
+  .cv-page__intro {
+    max-width: var(--content-width);
+    margin-bottom: var(--space-5);
+  }
+
+  .cv-page__intro > p {
+    color: var(--color-muted);
+  }
+
+  .cv-page__layout {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .cv-page__content {
+    min-width: 0;
+    max-width: var(--content-width);
+  }
+
+  .cv-page__back-to-top {
+    margin-top: var(--space-5);
+  }
+
+  .cv-page__back-to-top a {
     color: var(--color-muted);
   }
 
@@ -67,6 +101,33 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   :global(.cv-document .cv a) {
     overflow-wrap: anywhere;
+  }
+
+  :global(.cv-document .cv h2[id]),
+  :global(.cv-document .cv h3[id]) {
+    scroll-margin-top: var(--space-5);
+  }
+
+  @media (min-width: 980px) {
+    .cv-page {
+      width: min(calc(100% - 3rem), var(--shell-width));
+    }
+
+    .cv-page__layout {
+      grid-template-columns: minmax(0, var(--content-width)) minmax(14rem, 16rem);
+      grid-template-areas: "content toc";
+      column-gap: clamp(2rem, 5vw, 4rem);
+      align-items: start;
+    }
+
+    .cv-page__content {
+      grid-area: content;
+    }
+
+    :global(.cv-page__toc) {
+      grid-area: toc;
+      align-self: start;
+    }
   }
 
   @media (max-width: 720px) {
