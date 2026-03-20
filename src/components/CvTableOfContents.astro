@@ -47,6 +47,7 @@ const {
       const headings = Array.from(container.querySelectorAll("h2, h3"));
       const usedIds = new Set();
       const entries = [];
+      let currentSectionId = null;
 
       headings.forEach((heading, index) => {
         const text = heading.textContent?.replace(/\s+/g, " ").trim() ?? "";
@@ -78,11 +79,18 @@ const {
           heading.id = id;
         }
 
+        const level = Number(heading.tagName.slice(1));
+
+        if (level === 2) {
+          currentSectionId = id;
+        }
+
         usedIds.add(id);
         entries.push({
           id,
           text,
-          level: Number(heading.tagName.slice(1)),
+          level,
+          parentId: level === 3 ? currentSectionId : null,
         });
       });
 
@@ -92,10 +100,16 @@ const {
     const createItem = (entry) => {
       const item = document.createElement("li");
       item.className = `cv-toc__item cv-toc__item--level-${entry.level}`;
+      item.dataset.cvTocEntryId = entry.id;
+
+      if (entry.parentId) {
+        item.dataset.cvTocParentId = entry.parentId;
+      }
 
       const link = document.createElement("a");
       link.href = `#${entry.id}`;
       link.textContent = entry.text;
+      link.dataset.cvTocLinkId = entry.id;
 
       item.append(link);
       return item;
@@ -122,6 +136,68 @@ const {
         }
 
         currentSublist.append(createItem(entry));
+      });
+    };
+
+    const collectEntryNodes = (root) => {
+      const entryNodesById = new Map();
+
+      root.querySelectorAll("[data-cv-toc-entry-id]").forEach((item) => {
+        if (!(item instanceof HTMLLIElement)) {
+          return;
+        }
+
+        const id = item.dataset.cvTocEntryId;
+
+        if (!id) {
+          return;
+        }
+
+        const link = item.firstElementChild;
+        const entryNodes = entryNodesById.get(id) ?? { items: [], links: [] };
+
+        entryNodes.items.push(item);
+
+        if (link instanceof HTMLAnchorElement) {
+          entryNodes.links.push(link);
+        }
+
+        entryNodesById.set(id, entryNodes);
+      });
+
+      return entryNodesById;
+    };
+
+    const applyActiveState = (entriesById, entryNodesById, activeId) => {
+      const activeEntry = activeId ? entriesById.get(activeId) ?? null : null;
+      const currentSectionId = activeEntry
+        ? activeEntry.level === 3
+          ? activeEntry.parentId
+          : activeEntry.id
+        : null;
+      const currentSubsectionId = activeEntry?.level === 3 ? activeEntry.id : null;
+
+      entryNodesById.forEach((entryNodes, id) => {
+        const isActive = id === activeId;
+        const isCurrentSection = id === currentSectionId;
+        const isCurrentSubsection = id === currentSubsectionId;
+
+        entryNodes.items.forEach((item) => {
+          item.classList.toggle("cv-toc__item--active", isActive);
+          item.classList.toggle("cv-toc__item--current-section", isCurrentSection);
+          item.classList.toggle(
+            "cv-toc__item--current-subsection",
+            isCurrentSubsection,
+          );
+        });
+
+        entryNodes.links.forEach((link) => {
+          if (isActive) {
+            link.setAttribute("aria-current", "location");
+          } else {
+            link.removeAttribute("aria-current");
+          }
+        });
       });
     };
 
@@ -182,12 +258,70 @@ const {
       fillList(mobileList, entries);
       root.hidden = false;
 
+      const entriesById = new Map(entries.map((entry) => [entry.id, entry]));
+      const entryNodesById = collectEntryNodes(root);
+      const headings = entries
+        .map((entry) => document.getElementById(entry.id))
+        .filter((heading) => heading instanceof HTMLElement);
+
+      let activeId = null;
+      let activeSyncFrame = 0;
+
+      const getActivationOffset = () =>
+        Math.min(Math.max(window.innerHeight * 0.22, 120), 200);
+
+      const getActiveHeadingId = () => {
+        if (headings.length === 0) {
+          return null;
+        }
+
+        if (
+          window.scrollY + window.innerHeight >=
+          document.documentElement.scrollHeight - 8
+        ) {
+          return headings.at(-1)?.id ?? null;
+        }
+
+        const activationOffset = getActivationOffset();
+        let currentHeading = headings[0];
+
+        headings.forEach((heading) => {
+          if (heading.getBoundingClientRect().top <= activationOffset) {
+            currentHeading = heading;
+          }
+        });
+
+        return currentHeading.id || null;
+      };
+
+      const syncActiveState = () => {
+        activeSyncFrame = 0;
+
+        const nextActiveId = getActiveHeadingId();
+
+        if (nextActiveId === activeId) {
+          return;
+        }
+
+        activeId = nextActiveId;
+        applyActiveState(entriesById, entryNodesById, activeId);
+      };
+
+      const requestActiveSync = () => {
+        if (activeSyncFrame !== 0) {
+          return;
+        }
+
+        activeSyncFrame = window.requestAnimationFrame(syncActiveState);
+      };
+
       const mobileDetails = root.querySelector("[data-cv-toc-mobile]");
 
       if (mobileDetails instanceof HTMLDetailsElement) {
         mobileDetails.querySelectorAll('a[href^="#"]').forEach((link) => {
           link.addEventListener("click", () => {
             mobileDetails.open = false;
+            requestActiveSync();
           });
         });
 
@@ -206,14 +340,29 @@ const {
         });
       }
 
+      if ("IntersectionObserver" in window) {
+        const headingObserver = new IntersectionObserver(requestActiveSync, {
+          rootMargin: "-20% 0px -65% 0px",
+          threshold: [0, 1],
+        });
+
+        headings.forEach((heading) => {
+          headingObserver.observe(heading);
+        });
+      }
+
       const syncDesktopOverflow = () => {
         window.requestAnimationFrame(() => {
           setDesktopOverflow(root);
         });
       };
 
+      requestActiveSync();
       syncDesktopOverflow();
+      window.addEventListener("scroll", requestActiveSync, { passive: true });
+      window.addEventListener("hashchange", requestActiveSync);
       window.addEventListener("resize", syncDesktopOverflow);
+      window.addEventListener("resize", requestActiveSync);
     };
 
     const init = () => {
