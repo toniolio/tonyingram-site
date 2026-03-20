@@ -10,7 +10,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   canonicalPath="/cv/"
 >
   <section class="section">
-    <div class="site-shell narrow-shell cv-page" id="cv-top">
+    <div class="site-shell cv-page" id="cv-top">
       <div class="cv-page__intro">
         <h1>Curriculum Vitae</h1>
         <p>This is a long form, somewhat &ldquo;academic&rdquo; style curriculum vitae.</p>
@@ -20,11 +20,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </p>
       </div>
 
-      <CvTableOfContents />
+      <div class="cv-page__body">
+        <CvTableOfContents />
 
-      <div class="cv-page__content">
-        <CvDocument />
-        <p class="cv-page__back-to-top"><a href="#cv-top">Back to top</a></p>
+        <div class="cv-page__content">
+          <CvDocument />
+          <p class="cv-page__back-to-top"><a href="#cv-top">Back to top</a></p>
+        </div>
       </div>
     </div>
   </section>
@@ -33,6 +35,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 <style>
   .cv-page {
     color: var(--color-text);
+    --cv-sidebar-width: clamp(14rem, 18vw, 17rem);
+    --cv-column-gap: clamp(2rem, 5vw, 4rem);
   }
 
   .cv-page__intro {
@@ -42,6 +46,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   .cv-page__intro > p {
     color: var(--color-muted);
+  }
+
+  .cv-page__body {
+    display: grid;
+    gap: var(--space-4);
   }
 
   .cv-page__content {
@@ -101,27 +110,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     scroll-margin-top: var(--space-5);
   }
 
-  @media (min-width: 980px) {
-    .cv-page {
-      width: min(calc(100% - 3rem), var(--shell-width));
-      display: grid;
-      grid-template-columns: minmax(14rem, 17rem) minmax(0, var(--content-width));
-      column-gap: clamp(2rem, 5vw, 4rem);
-      align-items: start;
-    }
-
+  @media (min-width: 900px) {
     .cv-page__intro {
-      grid-column: 2;
+      margin-left: calc(var(--cv-sidebar-width) + var(--cv-column-gap));
       margin-bottom: var(--space-5);
     }
 
-    .cv-page__content {
-      grid-column: 2;
+    .cv-page__body {
+      grid-template-columns: var(--cv-sidebar-width) minmax(0, 1fr);
+      column-gap: var(--cv-column-gap);
+      align-items: start;
     }
 
     :global(.cv-page__toc) {
-      grid-column: 1;
-      grid-row: 2;
       align-self: start;
     }
   }

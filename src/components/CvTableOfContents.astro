@@ -135,7 +135,7 @@ const {
       root.classList.remove("cv-toc--desktop-scrollable");
       desktopNav.style.removeProperty("--cv-toc-max-height");
 
-      if (!window.matchMedia("(min-width: 980px)").matches) {
+      if (!window.matchMedia("(min-width: 900px)").matches) {
         return;
       }
 
@@ -359,7 +359,7 @@ const {
     color: var(--color-muted);
   }
 
-  @media (min-width: 980px) {
+  @media (min-width: 900px) {
     .cv-toc {
       position: sticky;
       top: var(--space-5);
