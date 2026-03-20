@@ -463,23 +463,23 @@ const {
     list-style: none;
   }
 
-  .cv-toc__sublist {
+  :global(.cv-toc__sublist) {
     margin: 0.5rem 0 0;
     padding: 0 0 0 0.95rem;
     border-left: 1px solid var(--color-border);
     list-style: none;
   }
 
-  .cv-toc__item--level-2 + .cv-toc__item--level-2 {
+  :global(.cv-toc__item--level-2 + .cv-toc__item--level-2) {
     margin-top: 0.95rem;
   }
 
-  .cv-toc__item--level-3 {
+  :global(.cv-toc__item--level-3) {
     margin-top: 0.42rem;
     padding-left: 0.35rem;
   }
 
-  .cv-toc__item a {
+  :global(.cv-toc__item a) {
     display: inline-block;
     padding: 0.12rem 0.38rem;
     margin-left: -0.38rem;
@@ -491,40 +491,40 @@ const {
       border-color 140ms ease;
   }
 
-  .cv-toc__item--level-2 a {
+  :global(.cv-toc__item--level-2 a) {
     color: var(--color-heading);
     font-weight: 600;
   }
 
-  .cv-toc__item--level-3 a {
+  :global(.cv-toc__item--level-3 a) {
     color: var(--color-muted);
     font-size: 0.95rem;
   }
 
-  .cv-toc__item--current-section > a {
+  :global(.cv-toc__item--current-section > a) {
     color: var(--color-heading);
   }
 
-  .cv-toc__item--level-2.cv-toc__item--current-section > a {
+  :global(.cv-toc__item--level-2.cv-toc__item--current-section > a) {
     font-weight: 700;
   }
 
-  .cv-toc__item--level-2.cv-toc__item--active > a {
+  :global(.cv-toc__item--level-2.cv-toc__item--active > a) {
     background: var(--color-surface-strong);
   }
 
-  .cv-toc__item--current-section > .cv-toc__sublist {
+  :global(.cv-toc__item--current-section > .cv-toc__sublist) {
     border-left-color: var(--color-text);
   }
 
-  .cv-toc__item--level-3.cv-toc__item--current-subsection > a {
+  :global(.cv-toc__item--level-3.cv-toc__item--current-subsection > a) {
     color: var(--color-heading);
     background: var(--color-surface-strong);
     font-weight: 600;
   }
 
-  .cv-toc__item a:hover,
-  .cv-toc__item a:focus-visible,
+  :global(.cv-toc__item a:hover),
+  :global(.cv-toc__item a:focus-visible),
   .cv-toc__top-link:hover,
   .cv-toc__top-link:focus-visible {
     text-decoration: underline;
