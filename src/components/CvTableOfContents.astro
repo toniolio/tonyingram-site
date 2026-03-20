@@ -488,7 +488,8 @@ const {
     transition:
       color 140ms ease,
       background-color 140ms ease,
-      border-color 140ms ease;
+      border-color 140ms ease,
+      box-shadow 140ms ease;
   }
 
   :global(.cv-toc__item--level-2 a) {
@@ -503,6 +504,8 @@ const {
 
   :global(.cv-toc__item--current-section > a) {
     color: var(--color-heading);
+    background: var(--color-surface-strong);
+    box-shadow: inset 3px 0 0 var(--color-heading);
   }
 
   :global(.cv-toc__item--level-2.cv-toc__item--current-section > a) {
@@ -510,17 +513,22 @@ const {
   }
 
   :global(.cv-toc__item--level-2.cv-toc__item--active > a) {
-    background: var(--color-surface-strong);
+    box-shadow:
+      inset 4px 0 0 var(--color-heading),
+      0 0 0 1px var(--color-border);
   }
 
   :global(.cv-toc__item--current-section > .cv-toc__sublist) {
-    border-left-color: var(--color-text);
+    border-left-color: var(--color-heading);
   }
 
   :global(.cv-toc__item--level-3.cv-toc__item--current-subsection > a) {
     color: var(--color-heading);
     background: var(--color-surface-strong);
-    font-weight: 600;
+    font-weight: 700;
+    box-shadow:
+      inset 3px 0 0 var(--color-heading),
+      0 0 0 1px var(--color-border);
   }
 
   :global(.cv-toc__item a:hover),
