@@ -1,0 +1,260 @@
+---
+interface Props {
+  targetSelector?: string;
+  topHref?: string;
+}
+
+const {
+  targetSelector = ".cv-document .cv",
+  topHref = "#cv-top",
+} = Astro.props;
+---
+
+<div
+  class="cv-page__toc cv-toc"
+  data-cv-toc-root
+  data-target-selector={targetSelector}
+  hidden
+>
+  <details class="cv-toc__mobile">
+    <summary>On this page</summary>
+    <nav class="cv-toc__nav" aria-label="Table of contents">
+      <ul class="cv-toc__list" data-cv-toc-mobile-list></ul>
+      <a class="cv-toc__top-link" href={topHref}>Back to top</a>
+    </nav>
+  </details>
+
+  <aside class="cv-toc__desktop" aria-labelledby="cv-toc-title">
+    <nav class="cv-toc__nav" aria-labelledby="cv-toc-title">
+      <h2 id="cv-toc-title" class="cv-toc__title">On this page</h2>
+      <ul class="cv-toc__list" data-cv-toc-desktop-list></ul>
+      <a class="cv-toc__top-link" href={topHref}>Back to top</a>
+    </nav>
+  </aside>
+</div>
+
+<script is:inline>
+  (() => {
+    const slugify = (value) =>
+      value
+        .toLowerCase()
+        .trim()
+        .replace(/&/g, " and ")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+
+    const buildEntries = (container) => {
+      const headings = Array.from(container.querySelectorAll("h2, h3"));
+      const usedIds = new Set();
+      const entries = [];
+
+      headings.forEach((heading, index) => {
+        const text = heading.textContent?.replace(/\s+/g, " ").trim() ?? "";
+
+        if (!text) {
+          return;
+        }
+
+        if (index === 0 && !heading.id) {
+          return;
+        }
+
+        const baseId =
+          heading.id.trim() || slugify(text) || `section-${entries.length + 1}`;
+
+        let id = baseId;
+        let suffix = 2;
+
+        while (
+          usedIds.has(id) ||
+          (document.getElementById(id) &&
+            document.getElementById(id) !== heading)
+        ) {
+          id = `${baseId}-${suffix}`;
+          suffix += 1;
+        }
+
+        if (heading.id !== id) {
+          heading.id = id;
+        }
+
+        usedIds.add(id);
+        entries.push({
+          id,
+          text,
+          level: Number(heading.tagName.slice(1)),
+        });
+      });
+
+      return entries;
+    };
+
+    const fillList = (list, entries) => {
+      list.replaceChildren();
+
+      const fragment = document.createDocumentFragment();
+
+      entries.forEach((entry) => {
+        const item = document.createElement("li");
+        item.className = `cv-toc__item cv-toc__item--level-${entry.level}`;
+
+        const link = document.createElement("a");
+        link.href = `#${entry.id}`;
+        link.textContent = entry.text;
+
+        item.append(link);
+        fragment.append(item);
+      });
+
+      list.append(fragment);
+    };
+
+    const initRoot = (root) => {
+      const targetSelector = root.dataset.targetSelector;
+
+      if (!targetSelector) {
+        return;
+      }
+
+      const target = document.querySelector(targetSelector);
+
+      if (!target) {
+        return;
+      }
+
+      const entries = buildEntries(target);
+
+      if (!entries.length) {
+        return;
+      }
+
+      const desktopList = root.querySelector("[data-cv-toc-desktop-list]");
+      const mobileList = root.querySelector("[data-cv-toc-mobile-list]");
+
+      if (!(desktopList instanceof HTMLUListElement)) {
+        return;
+      }
+
+      if (!(mobileList instanceof HTMLUListElement)) {
+        return;
+      }
+
+      fillList(desktopList, entries);
+      fillList(mobileList, entries);
+      root.hidden = false;
+
+      const mobileDetails = root.querySelector(".cv-toc__mobile");
+
+      if (mobileDetails instanceof HTMLDetailsElement) {
+        mobileDetails.querySelectorAll('a[href^="#"]').forEach((link) => {
+          link.addEventListener("click", () => {
+            mobileDetails.open = false;
+          });
+        });
+      }
+    };
+
+    const init = () => {
+      document.querySelectorAll("[data-cv-toc-root]").forEach((root) => {
+        if (root instanceof HTMLElement) {
+          initRoot(root);
+        }
+      });
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init, { once: true });
+    } else {
+      init();
+    }
+  })();
+</script>
+
+<style>
+  .cv-toc {
+    margin-bottom: var(--space-4);
+  }
+
+  .cv-toc__mobile {
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    background: var(--color-surface);
+  }
+
+  .cv-toc__mobile summary {
+    padding: 0.85rem 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .cv-toc__mobile summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .cv-toc__mobile[open] .cv-toc__nav {
+    padding: 0 1rem 1rem;
+  }
+
+  .cv-toc__desktop {
+    display: none;
+  }
+
+  .cv-toc__title {
+    margin: 0 0 0.9rem;
+    font-size: 1rem;
+  }
+
+  .cv-toc__list {
+    margin: 0 0 var(--space-3);
+    padding: 0;
+    list-style: none;
+  }
+
+  .cv-toc__item + .cv-toc__item {
+    margin-top: 0.6rem;
+  }
+
+  .cv-toc__item--level-3 {
+    padding-left: 0.9rem;
+    font-size: 0.95rem;
+  }
+
+  .cv-toc__nav a {
+    text-decoration: none;
+  }
+
+  .cv-toc__nav a:hover,
+  .cv-toc__nav a:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 0.22em;
+  }
+
+  .cv-toc__top-link {
+    display: inline-block;
+    font-size: 0.95rem;
+  }
+
+  @media (min-width: 980px) {
+    .cv-toc {
+      margin: 0;
+    }
+
+    .cv-toc__mobile {
+      display: none;
+    }
+
+    .cv-toc__desktop {
+      display: block;
+      position: sticky;
+      top: var(--space-5);
+    }
+
+    .cv-toc__nav {
+      max-height: calc(100vh - (2 * var(--space-5)));
+      padding-left: 1rem;
+      overflow: auto;
+      border-left: 1px solid var(--color-border);
+    }
+  }
+</style>
