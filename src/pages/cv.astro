@@ -112,11 +112,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   @media (min-width: 900px) {
     .cv-page__intro {
-      margin-left: calc(var(--cv-sidebar-width) + var(--cv-column-gap));
+      margin-inline: auto;
       margin-bottom: var(--space-5);
     }
 
     .cv-page__body {
+      width: 100%;
+      max-width: calc(var(--cv-sidebar-width) + var(--cv-column-gap) + var(--content-width));
+      margin-inline: auto;
       grid-template-columns: var(--cv-sidebar-width) minmax(0, 1fr);
       column-gap: var(--cv-column-gap);
       align-items: start;
