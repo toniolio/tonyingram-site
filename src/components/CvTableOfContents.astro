@@ -481,7 +481,14 @@ const {
 
   .cv-toc__item a {
     display: inline-block;
+    padding: 0.12rem 0.38rem;
+    margin-left: -0.38rem;
+    border-radius: 0.45rem;
     text-decoration: none;
+    transition:
+      color 140ms ease,
+      background-color 140ms ease,
+      border-color 140ms ease;
   }
 
   .cv-toc__item--level-2 a {
@@ -492,6 +499,28 @@ const {
   .cv-toc__item--level-3 a {
     color: var(--color-muted);
     font-size: 0.95rem;
+  }
+
+  .cv-toc__item--current-section > a {
+    color: var(--color-heading);
+  }
+
+  .cv-toc__item--level-2.cv-toc__item--current-section > a {
+    font-weight: 700;
+  }
+
+  .cv-toc__item--level-2.cv-toc__item--active > a {
+    background: var(--color-surface-strong);
+  }
+
+  .cv-toc__item--current-section > .cv-toc__sublist {
+    border-left-color: var(--color-text);
+  }
+
+  .cv-toc__item--level-3.cv-toc__item--current-subsection > a {
+    color: var(--color-heading);
+    background: var(--color-surface-strong);
+    font-weight: 600;
   }
 
   .cv-toc__item a:hover,
