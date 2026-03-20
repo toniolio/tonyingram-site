@@ -505,7 +505,6 @@ const {
   :global(.cv-toc__item--current-section > a) {
     color: var(--color-heading);
     background: var(--color-surface-strong);
-    box-shadow: inset 3px 0 0 var(--color-heading);
   }
 
   :global(.cv-toc__item--level-2.cv-toc__item--current-section > a) {
@@ -513,9 +512,7 @@ const {
   }
 
   :global(.cv-toc__item--level-2.cv-toc__item--active > a) {
-    box-shadow:
-      inset 4px 0 0 var(--color-heading),
-      0 0 0 1px var(--color-border);
+    box-shadow: 0 0 0 1px var(--color-border);
   }
 
   :global(.cv-toc__item--current-section > .cv-toc__sublist) {
@@ -526,9 +523,7 @@ const {
     color: var(--color-heading);
     background: var(--color-surface-strong);
     font-weight: 700;
-    box-shadow:
-      inset 3px 0 0 var(--color-heading),
-      0 0 0 1px var(--color-border);
+    box-shadow: 0 0 0 1px var(--color-border);
   }
 
   :global(.cv-toc__item a:hover),
