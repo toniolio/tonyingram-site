@@ -89,50 +89,61 @@ const {
       return entries;
     };
 
+    const createItem = (entry) => {
+      const item = document.createElement("li");
+      item.className = `cv-toc__item cv-toc__item--level-${entry.level}`;
+
+      const link = document.createElement("a");
+      link.href = `#${entry.id}`;
+      link.textContent = entry.text;
+
+      item.append(link);
+      return item;
+    };
+
     const fillList = (list, entries) => {
       list.replaceChildren();
 
-      const fragment = document.createDocumentFragment();
+      let currentSectionItem = null;
+      let currentSublist = null;
 
       entries.forEach((entry) => {
-        const item = document.createElement("li");
-        item.className = `cv-toc__item cv-toc__item--level-${entry.level}`;
+        if (entry.level === 2 || !currentSectionItem) {
+          currentSectionItem = createItem(entry);
+          currentSublist = null;
+          list.append(currentSectionItem);
+          return;
+        }
 
-        const link = document.createElement("a");
-        link.href = `#${entry.id}`;
-        link.textContent = entry.text;
+        if (!currentSublist) {
+          currentSublist = document.createElement("ul");
+          currentSublist.className = "cv-toc__sublist";
+          currentSectionItem.append(currentSublist);
+        }
 
-        item.append(link);
-        fragment.append(item);
+        currentSublist.append(createItem(entry));
       });
-
-      list.append(fragment);
     };
 
     const setDesktopOverflow = (root) => {
-      const desktop = root.querySelector("[data-cv-toc-desktop]");
       const desktopNav = root.querySelector(".cv-toc__desktop-nav");
-
-      if (!(desktop instanceof HTMLElement)) {
-        return;
-      }
 
       if (!(desktopNav instanceof HTMLElement)) {
         return;
       }
 
-      desktop.classList.remove("cv-toc__desktop--scrollable");
+      root.classList.remove("cv-toc--desktop-scrollable");
       desktopNav.style.removeProperty("--cv-toc-max-height");
 
       if (!window.matchMedia("(min-width: 980px)").matches) {
         return;
       }
 
-      const topOffset = Number.parseFloat(getComputedStyle(desktop).top) || 0;
+      const topOffset = Number.parseFloat(getComputedStyle(root).top) || 0;
       const maxHeight = Math.floor(window.innerHeight - topOffset - 24);
 
       if (desktopNav.scrollHeight > maxHeight) {
-        desktop.classList.add("cv-toc__desktop--scrollable");
+        root.classList.add("cv-toc--desktop-scrollable");
         desktopNav.style.setProperty("--cv-toc-max-height", `${maxHeight}px`);
       }
     };
@@ -303,23 +314,20 @@ const {
     list-style: none;
   }
 
+  .cv-toc__sublist {
+    margin: 0.5rem 0 0;
+    padding: 0 0 0 0.95rem;
+    border-left: 1px solid var(--color-border);
+    list-style: none;
+  }
+
   .cv-toc__item--level-2 + .cv-toc__item--level-2 {
     margin-top: 0.95rem;
   }
 
   .cv-toc__item--level-3 {
-    position: relative;
     margin-top: 0.42rem;
-    padding-left: 1rem;
-  }
-
-  .cv-toc__item--level-3::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0.8rem;
-    width: 0.45rem;
-    border-top: 1px solid var(--color-border);
+    padding-left: 0.35rem;
   }
 
   .cv-toc__item a {
@@ -353,7 +361,8 @@ const {
 
   @media (min-width: 980px) {
     .cv-toc {
-      position: static;
+      position: sticky;
+      top: var(--space-5);
       width: auto;
       margin: 0;
     }
@@ -364,8 +373,6 @@ const {
 
     .cv-toc__desktop {
       display: block;
-      position: sticky;
-      top: var(--space-5);
     }
 
     .cv-toc__desktop-nav {
@@ -373,7 +380,7 @@ const {
       border-right: 1px solid var(--color-border);
     }
 
-    .cv-toc__desktop--scrollable .cv-toc__desktop-nav {
+    .cv-toc--desktop-scrollable .cv-toc__desktop-nav {
       max-height: var(--cv-toc-max-height);
       padding-bottom: 1.25rem;
       overflow: auto;
@@ -381,7 +388,7 @@ const {
       scrollbar-width: thin;
     }
 
-    .cv-toc__desktop--scrollable::after {
+    .cv-toc--desktop-scrollable .cv-toc__desktop::after {
       content: "";
       position: absolute;
       left: 0;
