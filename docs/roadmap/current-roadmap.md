@@ -3,7 +3,6 @@
 ## Now
 
 - Keep the current site stable and documented.
-- Keep the improved long-form CV navigation experience in place.
 
 ## Next
 
