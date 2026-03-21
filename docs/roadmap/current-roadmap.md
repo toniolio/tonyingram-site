@@ -3,6 +3,7 @@
 ## Now
 
 - Keep the current site stable and documented.
+- Preserve the improved long-form CV navigation experience.
 - Add light analytics in a way that keeps the site simple.
 
 ## Next
