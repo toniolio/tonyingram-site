@@ -1,8 +1,9 @@
 import { defineConfig } from "astro/config";
 import mdx from "@astrojs/mdx";
+import { siteConfig } from "./site.config.mjs";
 
 export default defineConfig({
-  site: "https://tonyingram.com",
+  site: siteConfig.site.url,
   output: "static",
   integrations: [mdx()],
 });

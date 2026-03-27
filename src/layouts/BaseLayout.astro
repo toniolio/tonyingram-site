@@ -2,6 +2,7 @@
 import SiteFooter from "../components/SiteFooter.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import "../styles/global.css";
+import { siteConfig } from "../../site.config.mjs";
 
 interface Props {
   title: string;
@@ -14,7 +15,7 @@ const {
   title,
   description,
   canonicalPath = "/",
-  socialImage = "/images/tonyingram_phd_crop.jpg",
+  socialImage = siteConfig.site.defaultSocialImage,
 } = Astro.props;
 
 const canonicalUrl = new URL(canonicalPath, Astro.site);
