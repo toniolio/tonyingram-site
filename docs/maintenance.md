@@ -11,6 +11,7 @@ Practical local build and deploy notes for `tonyingram.com`.
 - Checks: `npm run check`
 - Build: `npm run build`
 - Preview: `npm run preview`
+- CI: GitHub Actions runs `npm ci`, `npm run check`, and `npm run build` on pushes and pull requests.
 
 ## Deploy
 
